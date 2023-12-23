@@ -16,7 +16,7 @@ app.use('/', (req:Request, res:Response) => {
     res.send('Welcome to the write app')
 })
 
-const port:string | number | null  = process.env.PORT || 8080
+const port: string | number | null  = process.env.PORT || 8080
 const server: string | number | null = process.env.HOST || 'localhost' 
 
 app.listen(port, () => {
