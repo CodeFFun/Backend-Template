@@ -1,11 +1,13 @@
 import express from 'express'
+import userController from '../controller/userController'
 
 const User = express.Router()
+const userInstance = new userController
 
-User.get('/')
-User.post('/')
-User.get('/:id')
-User.put('/:id')
-User.delete('/:id')
+User.get('/', userInstance.index)
+User.post('/', userInstance.create)
+User.get('/:id', userInstance.show)
+User.put('/:id', userInstance.update)
+User.delete('/:id', userInstance.delete)
 
 export default User

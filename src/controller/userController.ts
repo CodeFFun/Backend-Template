@@ -1,6 +1,7 @@
 import {Request, Response} from 'express'
 import User from '../models/User';
 import dataResponse from '../lib/dataResponse';
+import errorResponse from '../lib/errorResponse';
 
 interface userControllerInterface{
     index(req:Request, res:Response):void;
@@ -21,7 +22,8 @@ class userController implements userControllerInterface{
             await user.save()
             res.json(dataResponse(user, 200, 'User Created'))
         } catch (err) {
-            res.json(dataResponse(err, 400, `Something went wrong ${err}`))
+           const error = errorResponse(err)
+           res.status(400).json(dataResponse(error, 400, 'User validation error'))
         }
     }
     async show(req:Request, res:Response) {
@@ -30,7 +32,7 @@ class userController implements userControllerInterface{
           let findData =await User.findById(id)
            res.json(dataResponse(findData, 200, ''));
         }catch(err){
-          console.log(err);
+        //   errorResponse(err)
         }
       }
     async update(req:Request, res:Response){
