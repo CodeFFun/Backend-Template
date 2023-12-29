@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import router from './router'
 import cors from 'cors'
 import connect from './config/db'
+import cookiesParser from 'cookie-parser'
 
 dotenv.config()
 const app:Application = express()
@@ -10,6 +11,7 @@ const app:Application = express()
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 app.use(cors())
+app.use(cookiesParser())
 
 connect
 app.use(router)
