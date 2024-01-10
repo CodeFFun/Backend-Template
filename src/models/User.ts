@@ -5,14 +5,14 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 interface userModalInterface {
-  userName: string
+  username: string
   email: string
   password: string
   isAdmin: boolean
 }
 
 const userSchema = new Schema<userModalInterface>({
-  userName: { type: String, required: [true, 'Username is required'] },
+  username: { type: String, required: [true, 'Username is required'] },
   email: { type: String, required: [true, 'Enter your email'], unique: true, validate:[isEmail, 'Please Enter a valid email'] },
   password: { type: String, required: [true, 'Enter your password'] },
   isAdmin: { type: Boolean, required: true, default: false },

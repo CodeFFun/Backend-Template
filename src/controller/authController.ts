@@ -11,7 +11,7 @@ class authController{
             let password:string = req.body.password;
             let hashedPassword = user.password
         if(user.schema.methods.checkPassword(password, hashedPassword)){
-            let token = user.schema.methods.generateToken(res)
+            user.schema.methods.generateToken(res)
             res.json(dataResponse({userId: user.id}, 200, 'Login sucess'))
         } else{
             res.json(dataResponse('', 200, 'Invalid email or password'))

@@ -2,6 +2,7 @@ import {Request, Response} from 'express'
 import User from '../models/User';
 import dataResponse from '../lib/dataResponse';
 import errorResponse from '../lib/errorResponse';
+import sendEmail from '../lib/sendEmail';
 
 interface userControllerInterface{
     index(req:Request, res:Response):void;
@@ -20,7 +21,8 @@ class userController implements userControllerInterface{
         try {
             let user = new User(req.body)
             await user.save()
-            res.json(dataResponse(user, 200, 'User Created'))
+            sendEmail()
+            res.json(dataResponse(user, 200, 'User Created'))      
         } catch (err) {
            const error = errorResponse(err)
            res.status(400).json(dataResponse(error, 400, 'User validation error'))
