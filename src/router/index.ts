@@ -5,6 +5,6 @@ import Auth from './Auth'
 const router = express.Router()
 
 router.use('/user', User)
-router.use('/login', Auth)
+router.use('/auth', Auth)
 
 export default router

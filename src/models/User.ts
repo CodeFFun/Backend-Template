@@ -9,6 +9,7 @@ interface userModalInterface {
   email: string
   password: string
   isAdmin: boolean
+  verified:boolean
 }
 
 const userSchema = new Schema<userModalInterface>({
@@ -16,6 +17,7 @@ const userSchema = new Schema<userModalInterface>({
   email: { type: String, required: [true, 'Enter your email'], unique: true, validate:[isEmail, 'Please Enter a valid email'] },
   password: { type: String, required: [true, 'Enter your password'] },
   isAdmin: { type: Boolean, required: true, default: false },
+  verified: {type: Boolean, required: false, default: false}
 })
 
 userSchema.pre('save', async function (next){

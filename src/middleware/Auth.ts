@@ -6,7 +6,7 @@ class Auth{
         let token = new_token.split(' ')[1];
         let result:any = false;
         try {
-            result = jwt.verify(token, key);
+            result= jwt.verify(token, key);
             return result;
         }    catch (e) {
             return false;

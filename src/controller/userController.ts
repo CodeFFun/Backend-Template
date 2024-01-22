@@ -3,6 +3,9 @@ import User from '../models/User';
 import dataResponse from '../lib/dataResponse';
 import errorResponse from '../lib/errorResponse';
 import sendEmail from '../lib/sendEmail';
+import tokenController from './tokenController';
+
+
 
 interface userControllerInterface{
     index(req:Request, res:Response):void;
@@ -19,19 +22,22 @@ class userController implements userControllerInterface{
     }
     async create(req:Request, res:Response){
         try {
-            let user = new User(req.body)
+            const {username, email, password}  = req.body
+            let user = new User({username,email,password,verified: false})
             await user.save()
-            sendEmail()
-            res.json(dataResponse(user, 200, 'User Created'))      
+            const tempToken = Math.floor(100000 + Math.random() * 900000)
+            await sendEmail({email, tempToken})
+            tokenController.create({userId: user._id, token: tempToken.toString()})
+            res.json(dataResponse(user, 200, 'Pending Verification'))      
         } catch (err) {
            const error = errorResponse(err)
-           res.status(400).json(dataResponse(error, 400, 'User validation error'))
+           res.json(dataResponse(error, 400, 'User validation error'))
         }
     }
     async show(req:Request, res:Response) {
         let id = req.params.id;
         try{
-          let findData =await User.findById(id)
+          let findData = await User.findById(id)
            res.json(dataResponse(findData, 200, ''));
         }catch(err){
         //   errorResponse(err)
