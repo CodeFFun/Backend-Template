@@ -40,4 +40,7 @@ userSchema.methods.generateToken = function (res:Response){
    })
 }
 
+userSchema.methods.isVerified = function(){
+  return this.verified ? true : false
+}
 export default model<userModalInterface>('User', userSchema)

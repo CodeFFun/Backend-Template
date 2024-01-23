@@ -47,6 +47,27 @@ class tokenController{
             res.json(dataResponse(err, 400, 'Token validation error'))
         }
     }
+
+    async resend(req:Request, res:Response){
+        let id = req.body.userId
+        const tokenItem = await Token.findOne().where({userId: id})
+        try{
+            if(tokenItem){
+                if(tokenItem.schema.methods.isExpired){
+                    let token = Math.floor(100000 + Math.random() * 900000)
+                    await Token.deleteMany().where({userId: id})
+                    await tokenController.create({userId: id, token: token.toString()})
+                    res.json(dataResponse(null, 200, 'A new token has been sent to your email'))
+                } else{
+                    throw new Error('Token is already expired')
+                }
+            } else{
+                throw new Error('Your account may already be verified try logging in or try signing up again ')
+            }
+        } catch(err){
+            res.json(dataResponse(err, 400, 'Token validation error'))
+        }
+    }
 }
 
 
