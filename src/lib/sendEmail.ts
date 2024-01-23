@@ -1,7 +1,5 @@
 import nodemailer from 'nodemailer'
 
-
-  
   // async..await is not allowed in global scope, must use a wrapper
   export default async function sendEmail({email, tempToken}:{email:string, tempToken:number}) {
     const senderEmail = process.env.EMAIL_USER
@@ -23,7 +21,7 @@ import nodemailer from 'nodemailer'
     const info = await transporter.sendMail({
       from: senderEmail, // sender address
       to: `${email}`, // list of receivers
-      subject: "Hello ✔", // Subject line
+      subject: "Your Login Code", // Subject line
       text: `Your login code is ${tempToken}`, // plain text body
     });
   }
