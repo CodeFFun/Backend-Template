@@ -9,38 +9,46 @@ interface userModalInterface {
   email: string
   password: string
   isAdmin: boolean
-  verified:boolean
+  verified: boolean
 }
 
 const userSchema = new Schema<userModalInterface>({
   username: { type: String, required: [true, 'Username is required'] },
-  email: { type: String, required: [true, 'Enter your email'], unique: true, validate:[isEmail, 'Please Enter a valid email'] },
+  email: {
+    type: String,
+    required: [true, 'Enter your email'],
+    unique: true,
+    validate: [isEmail, 'Please Enter a valid email'],
+  },
   password: { type: String, required: [true, 'Enter your password'] },
   isAdmin: { type: Boolean, required: true, default: false },
-  verified: {type: Boolean, required: false, default: false}
+  verified: { type: Boolean, required: false, default: false },
 })
 
-userSchema.pre('save', async function (next){
+userSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt(10)
-  this.password =bcrypt.hashSync(this.password, salt)
-  next() 
+  this.password = bcrypt.hashSync(this.password, salt)
+  next()
 })
 
-userSchema.methods.checkPassword = function(password:string, hashedPassword:string){
-  return bcrypt.compareSync(password,hashedPassword);
+userSchema.methods.checkPassword = function (
+  password: string,
+  hashedPassword: string
+) {
+  return bcrypt.compareSync(password, hashedPassword)
 }
 
-userSchema.methods.generateToken = function (res:Response){
-  const jwts:any = process.env.JWT_SECRET
-   let token = jwt.sign({id: this._id}, jwts, {expiresIn: '30d'})
-   res.cookie('jwt',token, {
+userSchema.methods.generateToken = function (res: Response) {
+  const jwts: any = process.env.JWT_SECRET
+  let token = jwt.sign({ id: this._id }, jwts, { expiresIn: '30d' })
+  res.cookie('jwt', token, {
     httpOnly: true,
     sameSite: 'strict',
-    maxAge: 17 * 24 * 60 * 60 * 1000
-   })
+    maxAge: 17 * 24 * 60 * 60 * 1000,
+  })
 }
 
-userSchema.methods.isVerified = function(){
+userSchema.methods.isVerified = function () {
   return this.verified ? true : false
 }
 export default model<userModalInterface>('User', userSchema)
