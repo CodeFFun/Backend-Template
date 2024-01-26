@@ -67,11 +67,14 @@ class tokenController {
             dataResponse(null, 200, 'A new token has been sent to your email')
           )
         } else {
-          throw new Error('Token is already expired')
+          let user = await User.findOne({_id: id})
+          await Token.deleteMany().where({ userId: user?.id })
+          await User.deleteMany().where({ _id: user?.id })
+          throw new Error('Token is already expired, please sign up again')
         }
       } else {
         throw new Error(
-          'Your account may already be verified try logging in or try signing up again '
+          'Your account may already be verified or doesn\'t exist, try logging in or  signing up again '
         )
       }
     } catch (err) {

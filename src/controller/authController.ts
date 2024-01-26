@@ -3,6 +3,7 @@ import User from '../models/User'
 import Token from '../models/token'
 import Auth from '../middleware/Auth'
 import dataResponse from '../lib/dataResponse'
+import tokenController from './tokenController'
 
 class authController {
   async login(req: Request, res: Response) {
@@ -22,6 +23,7 @@ class authController {
         const tokenItem = await Token.findOne({ userId: user.id })
         if (tokenItem) {
           if (tokenItem.schema.methods.isNotExpired) {
+            tokenController.create({ userId: user.id, email: user.email })
           } else {
             await Token.deleteMany().where({ userId: user.id })
             await User.deleteMany().where({ _id: user.id })
@@ -29,7 +31,7 @@ class authController {
               dataResponse(
                 '',
                 200,
-                "Your account doesn't exist please sign up "
+                "Your account doesn't exist, please sign up "
               )
             )
           }
