@@ -21,7 +21,7 @@ tokenSchema.methods.checkToken = function(token:string, hashedToken:string){
     return bcrypt.compareSync(token, hashedToken);
 }
 
-tokenSchema.methods.isExpired = function(){
+tokenSchema.methods.isNotExpired = function(){
     const isNotExpired = new Date().getTime() < this.expiresAt.getTime() ? true : false
     return isNotExpired
 }
