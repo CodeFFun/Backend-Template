@@ -1,9 +1,7 @@
-import { Router } from "express";
-import authController from "../controller/authController";
-import userController from "../controller/userController";
-import tokenController from "../controller/tokenController";
-
-
+import { Router } from 'express'
+import authController from '../controller/authController'
+import userController from '../controller/userController'
+import tokenController from '../controller/tokenController'
 
 const authRouter = Router()
 const authInstance = new authController()
