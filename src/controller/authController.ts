@@ -19,9 +19,16 @@ class authController{
                     res.json(dataResponse('', 200, 'Invalid email or password'))
                 }
             } else {
-                let token = Token.find().where({userId: user.id})
-                await token.deleteMany()
-                await user.deleteOne()
+                const tokenItem = await Token.findOne({userId: user.id})
+               if(tokenItem){
+                if(tokenItem.schema.methods.isNotExpired){
+                    
+                } else {
+                    await Token.deleteMany().where({userId: user.id})
+                    await User.deleteMany().where({_id: user.id})
+                    res.json(dataResponse('', 200, "Your account doesn't exist please sign up "))
+                }
+               }
             }
         }
     }

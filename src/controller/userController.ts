@@ -24,11 +24,9 @@ class userController implements userControllerInterface{
         try {
             const {username, email, password}  = req.body
             let user = new User({username,email,password,verified: false})
-            await user.save()
-            const tempToken = Math.floor(100000 + Math.random() * 900000)
-            await sendEmail({email, tempToken})
-            tokenController.create({userId: user._id, token: tempToken.toString()})
-            res.json(dataResponse(user, 200, 'Pending Verification'))      
+            await user.save() 
+            await tokenController.create({userId: user._id, email: user.email})
+            res.json(dataResponse({id: user._id, email}, 200, 'Pending Verification'))      
         } catch (err) {
            const error = errorResponse(err)
            res.json(dataResponse(error, 400, 'User validation error'))

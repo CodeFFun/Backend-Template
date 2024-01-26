@@ -4,18 +4,21 @@ import mongoose from "mongoose";
 import Token from "../models/token";
 import User from "../models/User";
 import dataResponse from "../lib/dataResponse";
+import sendEmail from "../lib/sendEmail";
 
 class tokenController{
-    static async create({userId, token}:{userId:any, token:string}){
+    static async create({userId, email}:{userId:any, email:string}){
         try {
-                 const tokenObject = {
+            const tempToken = Math.floor(100000 + Math.random() * 900000)
+                const tokenObject = {
                         userId: new mongoose.Types.ObjectId(userId),
-                        token: await bcrypt.hash(token, 10),
+                        token: await bcrypt.hash(tempToken.toString(), 10),
                         createdAt: new Date(),
                         expiresAt: new Date(new Date().getTime() + 60 * 60 * 1000)
                  }
                  let tokenData = new Token(tokenObject)
                  await tokenData.save()
+                 await sendEmail({email: email, tempToken})
                  
         } catch (err) {
         //    return err
@@ -29,7 +32,7 @@ class tokenController{
             if(tokenItem){
                 let token = req.body.token
                 let hashedToken = tokenItem.token
-                if(tokenItem.schema.methods.isExpired){
+                if(tokenItem.schema.methods.isNotExpired){
                     if(tokenItem.schema.methods.checkToken(token.toString(), hashedToken)){
                         await Token.deleteMany().where({userId: id})
                         await User.findByIdAndUpdate({_id: id}, {verified: true})
@@ -50,13 +53,13 @@ class tokenController{
 
     async resend(req:Request, res:Response){
         let id = req.body.userId
+        let email = req.body.email
         const tokenItem = await Token.findOne().where({userId: id})
         try{
             if(tokenItem){
-                if(tokenItem.schema.methods.isExpired){
-                    let token = Math.floor(100000 + Math.random() * 900000)
+                if(tokenItem.schema.methods.isNotExpired){
                     await Token.deleteMany().where({userId: id})
-                    await tokenController.create({userId: id, token: token.toString()})
+                    await tokenController.create({userId: id, email: email})
                     res.json(dataResponse(null, 200, 'A new token has been sent to your email'))
                 } else{
                     throw new Error('Token is already expired')
