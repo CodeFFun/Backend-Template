@@ -23,7 +23,11 @@ class authController {
         const tokenItem = await Token.findOne({ userId: user.id })
         if (tokenItem) {
           if (tokenItem.schema.methods.isNotExpired) {
-            tokenController.create({ userId: user.id, email: user.email })
+            await Token.deleteMany().where({ userId: user._id })
+            await tokenController.create({ userId: user._id, email: email })
+            res.json(
+            dataResponse(null, 200, 'Your\'e account is not verified,a new token has been sent to your email')
+          )
           } else {
             await Token.deleteMany().where({ userId: user.id })
             await User.deleteMany().where({ _id: user.id })
@@ -35,8 +39,15 @@ class authController {
               )
             )
           }
+        } else{
+            await tokenController.create({ userId: user._id, email: email })
+            res.json(
+                dataResponse(null, 200, 'Your\'e account is not verified,a new token has been sent to your email')
+            )
         }
       }
+    } else{
+        res.json(dataResponse('', 200, 'This account doesn\'t exist, please sign up'))
     }
   }
 

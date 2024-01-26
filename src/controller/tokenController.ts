@@ -54,7 +54,7 @@ class tokenController {
     }
   }
 
-  async resend(req: Request, res: Response) {
+   async resend(req: Request, res: Response) {
     let id = req.body.userId
     let email = req.body.email
     const tokenItem = await Token.findOne().where({ userId: id })
