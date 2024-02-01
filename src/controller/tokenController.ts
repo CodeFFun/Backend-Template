@@ -36,7 +36,11 @@ class tokenController {
             tokenItem.schema.methods.checkToken(token.toString(), hashedToken)
           ) {
             await Token.deleteMany().where({ userId: id })
-            await User.findByIdAndUpdate({ _id: id }, { verified: true })
+
+            const user = await User.findById(id)
+            await user?.updateOne({ verified: true })
+            user?.schema.methods.generateToken(res)
+
             res.json(dataResponse(null, 200, 'Your account has been verified'))
           } else {
             throw new Error('Token is invalid')
