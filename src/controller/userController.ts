@@ -48,7 +48,9 @@ class userController implements userControllerInterface {
       await user?.updateOne(req.body)
       return res.json(dataResponse(user, 200, 'Profile Updated'))
     } catch (error) {
+
       res.json(dataResponse(error, 500, 'Something went wrong'))
+
     }
   }
   async delete(req: Request, res: Response) {
@@ -58,7 +60,9 @@ class userController implements userControllerInterface {
       await user?.deleteOne(req.body)
       return res.json(dataResponse(user, 200, 'Profile Deleted'))
     } catch (err) {
+
       res.json(dataResponse(err, 500, 'Something went wrong'))
+
     }
   }
 }
