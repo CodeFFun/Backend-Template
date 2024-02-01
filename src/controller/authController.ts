@@ -26,7 +26,7 @@ class authController {
             await Token.deleteMany().where({ userId: user._id })
             await tokenController.create({ userId: user._id, email: email })
             res.json(
-            dataResponse(null, 200, 'Your\'e account is not verified,a new token has been sent to your email')
+            dataResponse(null, 406, 'Your\'e account is not verified,a new token has been sent to your email')
           )
           } else {
             await Token.deleteMany().where({ userId: user.id })
@@ -34,7 +34,7 @@ class authController {
             res.json(
               dataResponse(
                 '',
-                200,
+                401,
                 "Your account doesn't exist, please sign up "
               )
             )
@@ -42,12 +42,12 @@ class authController {
         } else{
             await tokenController.create({ userId: user._id, email: email })
             res.json(
-                dataResponse(null, 200, 'Your\'e account is not verified,a new token has been sent to your email')
+                dataResponse(null, 406, 'Your\'e account is not verified,a new token has been sent to your email')
             )
         }
       }
     } else{
-        res.json(dataResponse('', 200, 'This account doesn\'t exist, please sign up'))
+        res.json(dataResponse('', 401, 'This account doesn\'t exist, please sign up'))
     }
   }
 
