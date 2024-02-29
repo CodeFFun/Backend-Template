@@ -42,7 +42,7 @@ class tokenController {
             res.json(dataResponse(null, 200, 'Your account has been verified'))
           } else {
             throw new Error('Token is invalid')
-          }
+          }  
         } else {
           throw new Error('Token is already expired')
         }

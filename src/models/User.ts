@@ -25,9 +25,8 @@ const userSchema = new Schema<userModalInterface>({
   verified: { type: Boolean, required: false, default: false },
 })
 
-userSchema.pre('save', async function (next) {
-  const salt = await bcrypt.genSalt(10)
-  this.password = bcrypt.hashSync(this.password, salt)
+userSchema.pre('save', function (next) {
+  this.password = bcrypt.hashSync(this.password, 10)
   next()
 })
 
@@ -35,7 +34,7 @@ userSchema.methods.checkPassword = function (
   password: string,
   hashedPassword: string
 ) {
-  return bcrypt.compareSync(password, hashedPassword)
+return bcrypt.compareSync(password, hashedPassword)
 }
 
 userSchema.methods.generateToken = function (res: Response) {
