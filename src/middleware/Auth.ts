@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 
+
 class Auth {
   static check(new_token: string) {
     let key: any = process.env.JWT_SECRET

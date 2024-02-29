@@ -34,7 +34,7 @@ userSchema.methods.checkPassword = function (
   password: string,
   hashedPassword: string
 ) {
-return bcrypt.compareSync(password, hashedPassword)
+  return bcrypt.compareSync(password, hashedPassword)
 }
 
 userSchema.methods.generateToken = function (res: Response) {
@@ -42,6 +42,7 @@ userSchema.methods.generateToken = function (res: Response) {
   let token = jwt.sign({ id: this._id }, jwts, { expiresIn: '30d' })
   res.cookie('jwt', token, {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production' ? true : false,
     sameSite: 'strict',
     maxAge: 17 * 24 * 60 * 60 * 1000,
   })
