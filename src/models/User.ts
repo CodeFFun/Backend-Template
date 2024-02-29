@@ -25,9 +25,8 @@ const userSchema = new Schema<userModalInterface>({
   verified: { type: Boolean, required: false, default: false },
 })
 
-userSchema.pre('save', async function (next) {
-  const salt = await bcrypt.genSalt(10)
-  this.password = bcrypt.hashSync(this.password, salt)
+userSchema.pre('save', function (next) {
+  this.password = bcrypt.hashSync(this.password, 10)
   next()
 })
 
@@ -43,6 +42,7 @@ userSchema.methods.generateToken = function (res: Response) {
   let token = jwt.sign({ id: this._id }, jwts, { expiresIn: '30d' })
   res.cookie('jwt', token, {
     httpOnly: true,
+    secure: process.env.NODE_ENV === 'production' ? true : false,
     sameSite: 'strict',
     maxAge: 17 * 24 * 60 * 60 * 1000,
   })

@@ -10,7 +10,7 @@ class authController {
     let email = req.body.email
     const user = await User.findOne({ email: email })
     if (user) {
-      if (user.schema.methods.isVerified()) {
+      if (user.schema.methods.isVerified) {
         let password: string = req.body.password
         let hashedPassword = user.password
         if (user.schema.methods.checkPassword(password, hashedPassword)) {
@@ -26,8 +26,12 @@ class authController {
             await Token.deleteMany().where({ userId: user._id })
             await tokenController.create({ userId: user._id, email: email })
             res.json(
-            dataResponse(null, 406, 'Your\'e account is not verified,a new token has been sent to your email')
-          )
+              dataResponse(
+                null,
+                406,
+                "Your'e account is not verified,a new token has been sent to your email"
+              )
+            )
           } else {
             await Token.deleteMany().where({ userId: user.id })
             await User.deleteMany().where({ _id: user.id })
@@ -39,6 +43,45 @@ class authController {
               )
             )
           }
+        } else {
+          await tokenController.create({ userId: user._id, email: email })
+          res.json(
+            dataResponse(
+              null,
+              406,
+              "Your'e account is not verified,a new token has been sent to your email"
+            )
+          )
+        }
+      }
+    } else {
+      res.json(
+        dataResponse('', 401, "This account doesn't exist, please sign up")
+      )
+    }
+  }
+
+  async forgotPassword(req: Request, res: Response) {
+    let email = req.body.email
+    let password = req.body.password
+    const user = await User.findOne({ email: email })
+    if (user) {
+      if (user.schema.methods.isVerified) {
+        user.password = password
+        await user.save()
+        res.json(dataResponse('', 200, 'Password reset successful'))
+      } else {
+        res.json(
+          dataResponse(
+            '',
+            401,
+            'Your account is not verified please try logging in'
+          )
+        )
+      }
+    } else {
+      res.json(dataResponse('', 401, 'This account does not exist.'))
+
         } else{
             await tokenController.create({ userId: user._id, email: email })
             res.json(   
@@ -47,19 +90,24 @@ class authController {
         }
       }
     } else{
-
-
         res.json(dataResponse('', 401, 'This account doesn\'t exist, please sign up'))
-
-
     }
   }
 
+  async logout(req: Request, res: Response) {
+    res.cookie('jwt', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production' ? true : false,
+      sameSite: 'strict',
+      maxAge: 1,
+    })
+    res.json(dataResponse('', 200, 'Logout successful'))
+  }
   async checkToken(req: Request, res: Response) {
     let token: any = req.headers.authorization
     let user = await Auth.check(token)
     if (user) {
-      res.json(dataResponse({ isLogin: true, user: user }, 200, ''))
+      res.json(dataResponse({ isLogin: true}, 200, ''))
     } else {
       res.json(dataResponse({ isLogin: false }, 200, ''))
     }

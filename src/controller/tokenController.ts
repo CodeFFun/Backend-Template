@@ -58,7 +58,7 @@ class tokenController {
     }
   }
 
-   async resend(req: Request, res: Response) {
+  async resend(req: Request, res: Response) {
     let id = req.body.userId
     let email = req.body.email
     const tokenItem = await Token.findOne().where({ userId: id })
@@ -71,14 +71,14 @@ class tokenController {
             dataResponse(null, 200, 'A new token has been sent to your email')
           )
         } else {
-          let user = await User.findOne({_id: id})
+          let user = await User.findOne({ _id: id })
           await Token.deleteMany().where({ userId: user?.id })
           await User.deleteMany().where({ _id: user?.id })
           throw new Error('Token is already expired, please sign up again')
         }
       } else {
         throw new Error(
-          'Your account may already be verified or doesn\'t exist, try logging in or  signing up again '
+          "Your account may already be verified or doesn't exist, try logging in or  signing up again "
         )
       }
     } catch (err) {

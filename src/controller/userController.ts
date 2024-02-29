@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import User from '../models/User'
 import dataResponse from '../lib/dataResponse'
 import errorResponse from '../lib/errorResponse'
-import sendEmail from '../lib/sendEmail'
 import tokenController from './tokenController'
 
 interface userControllerInterface {
