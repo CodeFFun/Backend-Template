@@ -4,6 +4,7 @@ import Token from '../models/token'
 import Auth from '../middleware/Auth'
 import dataResponse from '../lib/dataResponse'
 import tokenController from './tokenController'
+import { strict } from 'assert'
 
 class authController {
   async login(req: Request, res: Response) {
@@ -67,6 +68,9 @@ class authController {
     }
   }
 
+  async logout(req: Request, res: Response) {
+    res.cookie('', '', {httpOnly:true, sameSite: 'strict' , maxAge: 1 })
+  }
   async checkToken(req: Request, res: Response) {
     let token: any = req.headers.authorization
     let user = await Auth.check(token)
