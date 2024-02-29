@@ -41,12 +41,9 @@ class authController {
           }
         } else{
             await tokenController.create({ userId: user._id, email: email })
-            res.json(
-
-
-              
+            res.json(   
                 dataResponse(null, 406, 'Your\'e account is not verified,a new token has been sent to your email'
-            )
+            ))
         }
       }
     } else{
