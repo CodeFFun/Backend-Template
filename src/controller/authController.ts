@@ -82,16 +82,7 @@ class authController {
     } else {
       res.json(dataResponse('', 401, 'This account does not exist.'))
 
-        } else{
-            await tokenController.create({ userId: user._id, email: email })
-            res.json(   
-                dataResponse(null, 406, 'Your\'e account is not verified,a new token has been sent to your email'
-            ))
-        }
-      }
-    } else{
-        res.json(dataResponse('', 401, 'This account doesn\'t exist, please sign up'))
-    }
+  }
   }
 
   async logout(req: Request, res: Response) {
