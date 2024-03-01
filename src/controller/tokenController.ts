@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
-import Token from '../models/token'
+import Token from '../models/Token'
 import User from '../models/User'
 import dataResponse from '../lib/dataResponse'
 import sendEmail from '../lib/sendEmail'

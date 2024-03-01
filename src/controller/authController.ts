@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import User from '../models/User'
-import Token from '../models/token'
+import Token from '../models/Token'
 import Auth from '../middleware/Auth'
 import dataResponse from '../lib/dataResponse'
 import tokenController from './tokenController'
